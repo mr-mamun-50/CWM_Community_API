@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Faker\Core\File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -47,14 +49,10 @@ class PostController extends Controller
     {
         $request->validate([
             'body' => 'required',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        if ($request->hasFile('image')) {
-            $image = $this->saveImg($request->file('image'), 'posts');
-        } else {
-            $image = null;
-        }
+        $image = $this->saveImg($request->image, 'posts');
 
         $post = Post::create([
             'user_id' => auth()->user()->id,
@@ -65,7 +63,7 @@ class PostController extends Controller
         return response([
             'post' => $post,
             'message' => 'Post created successfully',
-        ], 201);
+        ], 200);
     }
 
     /**
@@ -106,7 +104,7 @@ class PostController extends Controller
         if (!$post) {
             return response([
                 'message' => 'Post not found'
-            ], 401);
+            ], 403);
         }
 
         if ($post->user_id !== auth()->user()->id) {
@@ -120,17 +118,8 @@ class PostController extends Controller
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        if ($request->image) {
-            $imageName = time() . '.' . $request->image->extension();
-
-            $request->image->move(public_path('images'), $imageName);
-        } else {
-            $imageName = $post->image;
-        }
-
         $post->update([
             'body' => $request->body,
-            'image' => $imageName,
         ]);
 
         return response([
@@ -152,7 +141,7 @@ class PostController extends Controller
         if (!$post) {
             return response([
                 'message' => 'Post not found'
-            ], 401);
+            ], 403);
         }
 
         if ($post->user_id !== auth()->user()->id) {
@@ -162,7 +151,8 @@ class PostController extends Controller
         }
 
         if ($post->image) {
-            unlink(public_path('images/' . $post->image));
+            $img = substr($post->image, -14);
+            Storage::disk('public')->delete('posts/' . $img);
         }
 
         $post->comments()->delete();

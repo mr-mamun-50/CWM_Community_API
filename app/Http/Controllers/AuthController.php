@@ -80,7 +80,7 @@ class AuthController extends Controller
             'name' => 'required|string',
         ]);
 
-        $image = $this->saveImg($request->file('image'), 'profiles');
+        $image = $this->saveImg($request->image, 'profiles');
 
         auth()->user()->update([
             'name' => $request->name,

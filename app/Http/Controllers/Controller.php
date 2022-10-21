@@ -19,7 +19,8 @@ class Controller extends BaseController
             return null;
         }
 
-        $filename = time() . '.' . $image->getClientOriginalExtension();
+        // $filename = time() . '.' . $image->getClientOriginalExtension();
+        $filename = time() . '.png';
         // save image
         Storage::disk($path)->put($filename, base64_decode($image));
 
