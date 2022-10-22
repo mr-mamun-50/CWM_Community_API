@@ -45,7 +45,7 @@ class CommentController extends Controller
         if (!$post) {
             return response([
                 'message' => 'Post not found'
-            ], 401);
+            ], 403);
         }
 
         $request->validate([
@@ -60,7 +60,7 @@ class CommentController extends Controller
 
         return response([
             'message' => 'Comment created successfully'
-        ], 201);
+        ], 200);
     }
 
     /**
@@ -99,7 +99,7 @@ class CommentController extends Controller
         if (!$comment) {
             return response([
                 'message' => 'Comment not found'
-            ], 401);
+            ], 403);
         }
 
         if ($comment->user_id !== auth()->user()->id) {
@@ -118,7 +118,7 @@ class CommentController extends Controller
 
         return response([
             'message' => 'Comment updated successfully'
-        ], 201);
+        ], 200);
     }
 
     /**
@@ -134,7 +134,7 @@ class CommentController extends Controller
         if (!$comment) {
             return response([
                 'message' => 'Comment not found'
-            ], 401);
+            ], 403);
         }
 
         if ($comment->user_id !== auth()->user()->id) {
@@ -147,6 +147,6 @@ class CommentController extends Controller
 
         return response([
             'message' => 'Comment deleted successfully'
-        ], 201);
+        ], 200);
     }
 }

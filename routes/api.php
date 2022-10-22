@@ -42,3 +42,4 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
 // php artisan serve --host 192.168.42.3 --port 8000
+// php artisan serve --host 192.168.219.211 --port 8000

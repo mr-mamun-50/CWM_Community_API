@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -76,16 +77,22 @@ class AuthController extends Controller
     //__Update user
     public function update(Request $request)
     {
-        $validate = $request->validate([
-            'name' => 'required|string',
-        ]);
+        if ($request->image != 0) {
 
-        $image = $this->saveImg($request->image, 'profiles');
+            $currentImage = substr(Auth::user()->image, -14);
+            Storage::disk('public')->delete('profiles/' . $currentImage);
 
-        auth()->user()->update([
-            'name' => $request->name,
-            'image' => $image,
-        ]);
+            $image = $this->saveImg($request->image, 'profiles');
+
+            auth()->user()->update([
+                'name' => $request->name,
+                'image' => $image,
+            ]);
+        } else {
+            auth()->user()->update([
+                'name' => $request->name,
+            ]);
+        }
 
         return response([
             'user' => auth()->user(),
