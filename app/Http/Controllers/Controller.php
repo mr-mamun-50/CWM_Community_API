@@ -25,6 +25,6 @@ class Controller extends BaseController
         Storage::disk($path)->put($filename, base64_decode($image));
 
         // return the image path
-        return URL::to('/public/') . '/storage/' . $path . '/' . $filename;
+        return URL::to('/') . '/storage/' . $path . '/' . $filename;
     }
 }
