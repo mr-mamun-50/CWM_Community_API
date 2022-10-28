@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,8 +41,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/posts/{id}/comments', [CommentController::class, 'home']);
     //__Likes
     Route::post('/posts/{id}/like', [LikeController::class, 'likeOrUnlike']);
+
+
+    //__Chats
+    Route::apiResource('chats', ChatController::class)->only(['index', 'store', 'show']);
+    Route::apiResource('chat_message', ChatMessageController::class)->only('index', 'store');
+
+    Route::apiResource('users', UserController::class)->only('index');
 });
 
 
 // php artisan serve --host 192.168.42.3 --port 8000
-// php artisan serve --host 192.168.219.211 --port 8000
+// php artisan serve --host 192.168.43.196 --port 8000
